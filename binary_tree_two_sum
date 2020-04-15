@@ -1,0 +1,78 @@
+from collections import deque
+
+class TreeNode:
+    def __init__(self, val):
+        self.val = val
+        self.left = None
+        self.right = None
+
+"""
+Given a binary tree and a target value, find two keys such that they sum to a target value and also such that the two keys dont lie on the same level.
+
+15
+      4
+   7    11
+   
+  
+  8 
+      3
+    4    4
+ 6    4  
+
+
+1) Initially store roots val in a dictionary 
+
+{4:[]}
+
+2) Add root node to queue
+
+3) Perform level order traversal
+    Check if the target - popped val is in dictionary. 
+    
+    If it is then make sure it is not at the same level as what the current node is on 
+    
+    
+    Input poped value into dictionary and input its level into the list / set
+    
+
+"""
+
+def two_sum(target, root):
+    queue = deque([root])
+    node_to_level = {}
+    level = 0
+    while queue:
+        size_ = len(queue)
+        while size_ > 0:
+            root = queue.pop()
+            if target - root.val in node_to_level:
+                if level not in node_to_level[target - root.val]:
+                    return target - root.val, root.val
+
+            if root.val not in node_to_level:
+                node_to_level[root.val] = set()
+            node_to_level[root.val].add(level)
+
+
+            if root.left:
+                queue.appendleft(root.left)
+
+            if root.right:
+                queue.appendleft(root.right)
+
+            size_ -= 1
+
+        level += 1
+
+
+"""
+      3
+    4    4
+ 6    4
+"""
+
+root = TreeNode(4)
+root.left = TreeNode(7)
+root.right = TreeNode(11)
+
+print(two_sum(11, root))
